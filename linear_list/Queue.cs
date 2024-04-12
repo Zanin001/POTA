@@ -8,18 +8,25 @@ public class Queue : IList
     {
         LinearList = new int?[3];
     }
-    public bool Delete(int index)
+    public bool Delete()
     {
-        var top = GetTop();
-        if (index < 0 || index > top)
+        try
+        {
+            for (int i = 0; i < LinearList.Length; i++)
+            {
+                if (LinearList[i] != null)
+                {
+                    LinearList[i] = null;
+                    break;
+                }
+            }
+
+            return true;
+        }
+        catch (Exception e)
+        {
             return false;
-
-        for (int i = index; i < top; i++)
-            LinearList[i] = LinearList[i + 1];
-
-        LinearList[GetTop()] = null;
-
-        return true;
+        }
     }
 
     public bool Insert(int value)

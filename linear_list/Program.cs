@@ -69,25 +69,12 @@ while (option != "0")
         }
         case "4":
         {
-            if (!TryGetInput("Digite o valor a ser excluido: ", out var valueToRemove))
-                break;
+            var response = linearList.Delete();
 
-            var index = linearList.Search(valueToRemove);
-            if (index == -1)
-            {
-                Console.WriteLine($"Valor {valueToRemove} nao foi encontrado na lista");
-                break;
-            }
-
-            if (index != -1)
-            {
-                var response = linearList.Delete(index);
-
-                if (!response)
-                    Console.WriteLine("Elemento nao pode ser excluido da lista");
-                else
-                    Console.WriteLine("Excluido com sucesso");
-            }
+            if (!response)
+                Console.WriteLine("Elemento nao pode ser excluido da lista");
+            else
+                Console.WriteLine("Excluido com sucesso");
 
             break;
         }

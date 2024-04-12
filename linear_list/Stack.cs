@@ -10,19 +10,25 @@ public class Stack : IList
     }
     
 
-    public bool Delete(int index)
+    public bool Delete()
     {
-        var top = GetTop();
+        try
+        {
+            for (int i = LinearList.Length - 1; i >= 0; i--)
+            {
+                if (LinearList[i] != null)
+                {
+                    LinearList[i] = null;
+                    break;
+                }
+            }
 
-        if (index < 0 || index > top)
+            return true;
+        }
+        catch (Exception e)
+        {
             return false;
-        
-        for (int i = index; i < top; i++)
-            LinearList[i] = LinearList[i + 1];
-
-        Array.Resize(ref LinearList, LinearList.Length - 1);
-
-        return true;
+        }
     }
 
     public bool Insert(int value)
