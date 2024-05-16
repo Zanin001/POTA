@@ -26,7 +26,7 @@ char MENU(void)
         printf("2 - Excluir\n");
         printf("3 - Exibir\n");
         printf("4 - Busca Sequencial\n");
-        printf("5 - Busca Binária\n");
+        printf("5 - Busca Binaria\n");
         printf("0 - FIM\n");
         printf("Opcao: ");
         op = getchar();
@@ -141,22 +141,43 @@ int BUSCA_SEQUENCIAL(NODO *no, char chave, int indice)
     return BUSCA_SEQUENCIAL(no->PROX, chave, indice + 1);
 }
 
-int BUSCA_BINARIA(NODO *inicio, NODO *fim, char chave) {
-    if (inicio == NULL || fim == NULL || inicio->INFO > fim->INFO)
-        return -1;
-    
-    NODO *meio = inicio;
-    NODO *temp;
-
-    for (temp = inicio; temp != fim->PROX; temp = temp->PROX) {
-        meio = meio->PROX;
+int TAMANHO_LISTA(NODO *inicio) {
+    int tamanho = 0;
+    NODO *atual = inicio;
+    while (atual != NULL) {
+        tamanho++;
+        atual = atual->PROX;
     }
-    
-    if (meio->INFO == chave)
-        return 0;
-    if (meio->INFO > chave)
-        return 1 + BUSCA_BINARIA(inicio, meio->PROX, chave);
-    return 1 + BUSCA_BINARIA(meio->PROX, fim, chave);
+    return tamanho;
+}
+
+int BUSCA_BINARIA(NODO *inicio, char valor, int inicioIndex, int fimIndex) 
+{
+    if (inicioIndex > fimIndex)
+        return -1;
+
+    int meio = (inicioIndex + fimIndex) / 2;
+    NODO *meioNo = inicio;
+    int i;
+    for (i = 0; i < meio; i++) {
+        meioNo = meioNo->PROX;
+    }
+
+    if (meioNo->INFO == valor)
+        return meio;
+    else if (meioNo->INFO < valor)
+        return buscaBinariaRecursiva(meioNo->PROX, valor, meio + 1, fimIndex);
+    else
+        return buscaBinariaRecursiva(inicio, valor, inicioIndex, meio - 1);
+}
+
+int BUSCA_BINARIA(NODO *inicio, char valor, int index) 
+{
+    if (inicio == NULL) 
+        return -1;
+    if (inicio->INFO == valor)
+        return index;
+    return BUSCA_BINARIA(inicio->PROX, valor, index + 1);
 }
 
 int main() 
@@ -173,30 +194,33 @@ int main()
                         break;
             case '3' :  EXIBIR();
                         break;
-            case '4' :  {
-                            char chave;
-                            printf("\nDigite o caracter que deseja buscar: ");
-                            scanf(" %c", &chave);
-                            int indiceSeq = BUSCA_SEQUENCIAL(LISTA, chave, 0);
-                            if (indiceSeq != -1)
-                                printf("\nCaracter encontrado na posicao %d (Busca Sequencial Recursiva)", indiceSeq);
-                            else
-                                printf("\nCaracter nao encontrado (Busca Sequencial Recursiva)");
-                            ESPERAR();
-                            break;
-                        }
-            case '5' :  {
-                            char chave;
-                            printf("\nDigite o caracter que deseja buscar: ");
-                            scanf(" %c", &chave);
-                            int profundidade = BUSCA_BINARIA(LISTA, NULL, chave);
-                            if (profundidade != -1)
-                                printf("\nCaracter encontrado na profundidade %d (Busca Binaria Recursiva)", profundidade);
-                            else
-                                printf("\nCaracter nao encontrado (Busca Binaria Recursiva)");
-                            ESPERAR();
-                            break;
-                        }
+            case '4' : 
+            {
+                        char chave;
+                        printf("\nDigite o caracter que deseja buscar: ");
+                        scanf(" %c", &chave);
+                        int index = BUSCA_SEQUENCIAL(LISTA, chave, 0);
+                        if (index != -1)
+                            printf("\nCaracter encontrado na posicao %d (Busca Sequencial Recursiva)", index);
+                        else
+                            printf("\nCaracter nao encontrado (Busca Sequencial Recursiva)");
+                        ESPERAR();
+                        break;
+            }
+            case '5' : 
+            {
+                        char valor;
+                        printf("Digite o valor a ser buscado: ");
+                        scanf(" %c", &valor);
+                        int tamanho = TAMANHO_LISTA(LISTA);
+                        int index = BUSCA_BINARIA(LISTA, valor, 0, tamanho - 1);
+                        if (index != -1)
+                            printf("\nCaracter encontrado na posicao %d (Busca Binaria Recursiva)", index);
+                        else 
+                            printf("\nCaracter nao encontrado (Busca Binaria Recursiva)");
+                        ESPERAR();
+                        break;
+            }
             case '0' :  laco = 0;
                         break;
         }
